@@ -54,10 +54,7 @@ Sylvester.Vector.prototype = {
   },
 
   forEach: function(fn, context) {
-    var n = this.elements.length;
-    for (var i = 0; i < n; i++) {
-      fn.call(context, this.elements[i], i+1);
-    }
+    this.elements.forEach(fn,context);
   },
 
   toUnitVector: function() {
@@ -83,6 +80,23 @@ Sylvester.Vector.prototype = {
     if (theta < -1) { theta = -1; }
     if (theta > 1) { theta = 1; }
     return Math.acos(theta);
+  },
+  
+  oAngleFrom: function(vector) {
+    if (this.elements.length !== vector.elements.length)return null;
+    var a,b;
+    if (this.elements.length == 2){
+      a=this.to3D();
+      b=vector.to3D();
+    }else{
+      a=this;
+      b=vector;
+    }
+    var cross=a.cross(b);
+    var dot=a.dot(b);
+    var sign=1;
+    cross.each(function(e){sign*=(e>=0?1:-1);});
+    return sign*Math.atan2(a.cross(b).modulus(), a.dot(b));
   },
 
   isParallelTo: function(vector) {
@@ -122,6 +136,13 @@ Sylvester.Vector.prototype = {
     if (n !== V.length) { return null; }
     while (n--) { product += this.elements[n] * V[n]; }
     return product;
+  },
+  
+  wedge: function(vector) {
+    var B = vector.elements || vector;
+    if (this.elements.length !== 2 || B.length !== 2) { return null; }
+    var A = this.elements;
+    return (A[0] * B[1]) - (A[1] * B[0]);
   },
 
   cross: function(vector) {
