@@ -66,9 +66,9 @@ Sylvester.Vector.prototype = {
     var dot = 0, mod1 = 0, mod2 = 0;
     // Work things out in parallel to save time
     this.each(function(x, i) {
-      dot += x * V[i-1];
+      dot += x * V[i];
       mod1 += x * x;
-      mod2 += V[i-1] * V[i-1];
+      mod2 += V[i] * V[i];
     });
     mod1 = Math.sqrt(mod1); mod2 = Math.sqrt(mod2);
     if (mod1*mod2 === 0) { return null; }
@@ -113,7 +113,7 @@ Sylvester.Vector.prototype = {
   add: function(vector) {
     var V = vector.elements || vector;
     if (this.elements.length !== V.length) { return null; }
-    return this.map(function(x, i) { return x + V[i-1]; });
+    return this.map(function(x, i) { return x + V[i]; });
   },
 
   subtract: function(vector) {
@@ -190,7 +190,7 @@ Sylvester.Vector.prototype = {
     if (V.length !== this.elements.length) { return null; }
     var sum = 0, part;
     this.each(function(x, i) {
-      part = x - V[i-1];
+      part = x - V[i];
       sum += part * part;
     });
     return Math.sqrt(sum);
@@ -247,7 +247,7 @@ Sylvester.Vector.prototype = {
       // obj is a point
       var Q = obj.elements || obj;
       if (this.elements.length !== Q.length) { return null; }
-      return this.map(function(x, i) { return Q[i-1] + (Q[i-1] - x); });
+      return this.map(function(x, i) { return Q[i] + (Q[i] - x); });
     }
   },
 
