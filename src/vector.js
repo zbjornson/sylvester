@@ -119,7 +119,7 @@ Sylvester.Vector.prototype = {
   subtract: function(vector) {
     var V = vector.elements || vector;
     if (this.elements.length !== V.length) { return null; }
-    return this.map(function(x, i) { return x - V[i-1]; });
+    return this.map(function(x, i) { return x - V[i]; });
   },
 
   multiply: function(k) {
