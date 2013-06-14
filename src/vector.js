@@ -46,11 +46,7 @@ Sylvester.Vector.prototype = {
   },
 
   map: function(fn, context) {
-    var elements = [];
-    this.each(function(x, i) {
-      elements.push(fn.call(context, x, i));
-    });
-    return Sylvester.Vector.create(elements);
+    return Sylvester.Vector.create(this.elements.map(fn,context));
   },
 
   forEach: function(fn, context) {
