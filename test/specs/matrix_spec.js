@@ -334,4 +334,27 @@ JS.ENV.MatrixSpec = JS.Test.describe("Matrix", function() { with(this) {
       [0,0,0,7]
     ]))
   }})
+
+  test("Eigenvalues", function() { with(this) {
+    assert($M([
+      [1, -2],
+      [-2, 0]
+    ]).eigenvalues()
+    .eql([(1-Math.sqrt(17))/2, (1+Math.sqrt(17))/2]))
+  }})
+
+  test("Eigenvectors", function() { with(this) {
+    assert(
+      $M([
+          [0.8, 0.3],
+          [0.2, 0.7]
+        ])
+      .eigenvectors()
+      .eql([
+          [-0.7071067811865475, 0.7071067811865476],
+          [-0.8320502943378437, -0.554700196225229]
+        ])
+    )
+  }})
+
 }})
