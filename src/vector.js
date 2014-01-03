@@ -13,6 +13,7 @@ Sylvester.Vector.Random = function(n) {
 };
 
 Sylvester.Vector.Zero = function(n) {
+  n=n||3;
   var elements = [];
   while (n--) { elements.push(0); }
   return Sylvester.Vector.create(elements);
