@@ -205,6 +205,7 @@ Sylvester.Vector.prototype = {
   },
 
   rotate: function(t, obj) {
+    obj=obj||Sylvester.Vector.Origin;
     var V, R = null, x, y, z;
     if (t.determinant) { R = t.elements; }
     switch (this.elements.length) {
@@ -277,3 +278,4 @@ Sylvester.Vector.prototype.each = Sylvester.Vector.prototype.forEach;
 Sylvester.Vector.i = Sylvester.Vector.create([1,0,0]);
 Sylvester.Vector.j = Sylvester.Vector.create([0,1,0]);
 Sylvester.Vector.k = Sylvester.Vector.create([0,0,1]);
+Sylvester.Vector.Origin = Sylvester.Vector.Zero();
