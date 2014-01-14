@@ -28,8 +28,9 @@ Sylvester.Vector.prototype = {
     return this.elements.length;
   },
 
-  modulus: function() {
-    return Math.sqrt(this.dot(this));
+  modulus: function(space) {
+    space=space||Sylvester.Vector.Space;
+    return space.norm(this.elements);
   },
 
   eql: function(vector) {
@@ -127,12 +128,10 @@ Sylvester.Vector.prototype = {
     return this.map(function(x) { return x*k; });
   },
 
-  dot: function(vector) {
+  dot: function(vector,space) {
+    space=space||Sylvester.Vector.Space;
     var V = vector.elements || vector;
-    var i, product = 0, n = this.elements.length;
-    if (n !== V.length) { return null; }
-    while (n--) { product += this.elements[n] * V[n]; }
-    return product;
+    return space.dot(this.elements,V);
   },
   
   wedge: function(vector) {
@@ -185,16 +184,12 @@ Sylvester.Vector.prototype = {
     });
   },
 
-  distanceFrom: function(obj) {
+  distanceFrom: function(obj,space) {
     if (obj.anchor || (obj.start && obj.end)) { return obj.distanceFrom(this); }
     var V = obj.elements || obj;
     if (V.length !== this.elements.length) { return null; }
-    var sum = 0, part;
-    this.each(function(x, i) {
-      part = x - V[i];
-      sum += part * part;
-    });
-    return Math.sqrt(sum);
+    space=space||Sylvester.Vector.Space;
+    return space.metric(V,this.elements);
   },
 
   liesOn: function(line) {
@@ -280,3 +275,4 @@ Sylvester.Vector.i = Sylvester.Vector.create([1,0,0]);
 Sylvester.Vector.j = Sylvester.Vector.create([0,1,0]);
 Sylvester.Vector.k = Sylvester.Vector.create([0,0,1]);
 Sylvester.Vector.Origin = Sylvester.Vector.Zero();
+Sylvester.Vector.Space=new Sylvester.Spaces.Eucledian();
