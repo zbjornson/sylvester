@@ -334,4 +334,9 @@ JS.ENV.MatrixSpec = JS.Test.describe("Matrix", function() { with(this) {
       [0,0,0,7]
     ]))
   }})
+
+  test("Sum", function() { with(this) 
+    assertEqual(10, $M([[1,2],[3,4]]).sum())
+  })
+
 }})

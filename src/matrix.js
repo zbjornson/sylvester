@@ -407,6 +407,23 @@ Sylvester.Matrix.prototype = {
     });
   },
 
+  sum: function() {
+    var sum = 0,
+      te = this.elements,
+      n = te.length,
+      j,
+      je,
+      jn;
+    for (var i = 0; i < n; i++) {
+      je = te[i];
+      jn = je.length;
+      for (j = 0; j < jn; j++) {
+        sum += je[i];
+      }
+    }
+    return sum;
+  },
+
   inspect: function() {
     var matrix_rows = [];
     var n = this.elements.length;

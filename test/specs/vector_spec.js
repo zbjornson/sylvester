@@ -175,4 +175,8 @@ JS.ENV.VectorSpec = JS.Test.describe("Vector", function() { with(this) {
     assert( $V([12,1]).rotate(Math.PI/2, [5,1]).eql([5,8]) )
     assert( Vector.i.rotate(-Math.PI/2, Sylvester.Line.create([10, 0, 100], Vector.k)).eql([10,9,0]) )
   }})
+
+  test("sum", function() { with(this) {
+    assertEqual(15, $V([1,2,3,4,5]).sum);
+  }})
 }})
