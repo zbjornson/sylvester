@@ -175,4 +175,19 @@ JS.ENV.VectorSpec = JS.Test.describe("Vector", function() { with(this) {
     assert( $V([12,1]).rotate(Math.PI/2, [5,1]).eql([5,8]) )
     assert( Vector.i.rotate(-Math.PI/2, Sylvester.Line.create([10, 0, 100], Vector.k)).eql([10,9,0]) )
   }})
+
+  test("pairwiseMultiply", function() { with(this) {
+    var V1 = $V([1,2,3]);
+    var V2 = $V([2,3,4]);
+    var V3 = $V([2,6,12]);
+    assert( V1.pairwiseMultiply(V2).eql(V3) );
+  }})
+
+  test("pairwiseDivide", function() { with(this) {
+    var V1 = $V([2,6,12]);
+    var V2 = $V([2,3,4]);
+    var V3 = $V([1,2,3]);
+    assert( V1.pairwiseDivide(V2).eql(V3) );
+  }})
+
 }})
