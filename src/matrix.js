@@ -284,7 +284,7 @@ Sylvester.Matrix.prototype = {
     if (!this.isSquare) { return null; }
     var els = [], n = this.elements.length;
     for (var i = 0; i < n; i++) {
-      els.push(this.elements[i][i]);
+      els[i] = this.elements[i][i];
     }
     return Sylvester.Vector.create(els);
   },
