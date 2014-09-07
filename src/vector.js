@@ -116,6 +116,24 @@ Sylvester.Vector.prototype = {
     return this.map(function(x) { return x*k; });
   },
 
+  pairwiseMultiply: function(vector) {
+    if (!vector.elements || this.elements.length !== vector.elements.length) { return null; }
+    var els = [], te = this.elements, n = te.length, ve = vector.elements;
+    for (i = 0; i < n; i++) {
+      els[i] = te[i] * ve[i];
+    }
+    return Sylvester.Vector.create(els);
+  },
+
+  pairwiseDivide: function(vector) {
+    if (!vector.elements || this.elements.length !== vector.elements.length) { return null; }
+    var els = [], te = this.elements, n = te.length, ve = vector.elements;
+    for (i = 0; i < n; i++) {
+      els[i] = te[i] / ve[i];
+    }
+    return Sylvester.Vector.create(els);
+  },
+
   dot: function(vector) {
     var V = vector.elements || vector;
     var i, product = 0, n = this.elements.length;

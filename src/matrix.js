@@ -213,6 +213,19 @@ Sylvester.Matrix.prototype = {
     return returnVector ? M.col(1) : M;
   },
 
+  pairwiseMultiply: function(matrix) {
+    if (!this.isSameSizeAs(matrix)) { return null; }
+    var els = [], i = this.elements.length, nj = this.elements[0].length, j;
+    while (i--) {
+      j = nj;
+      els[i] = [];
+      while (j--) {
+        els[i][j] = this.elements[i][j] * matrix.elements[i][j];
+      }
+    }
+    return Sylvester.Matrix.create(els);
+  },
+
   minor: function(a, b, c, d) {
     if (this.elements.length === 0) { return null; }
     var elements = [], ni = c, i, nj, j;

@@ -184,6 +184,13 @@ JS.ENV.MatrixSpec = JS.Test.describe("Matrix", function() { with(this) {
     assertNotNull( M1.x(M2.x(M1)) )
   }})
 
+  test("pairwiseMultiply", function() { with(this) {
+    var M1 = $M([[1,2],[3,4]]),
+      M2 = $M([[2,3],[4,5]]),
+      M3 = $M([[2,6],[12,20]]);
+    assert(M1.pairwiseMultiply(M2).eql(M3))
+  }})
+
   test("minor", function() { with(this) {
     var M2 = $M([
       [2,9],
