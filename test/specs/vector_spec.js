@@ -190,4 +190,7 @@ JS.ENV.VectorSpec = JS.Test.describe("Vector", function() { with(this) {
     assert( V1.pairwiseDivide(V2).eql(V3) );
   }})
 
+  test("sum", function() { with(this) {
+    assertEqual(15, $V([1,2,3,4,5]).sum());
+  }})
 }})

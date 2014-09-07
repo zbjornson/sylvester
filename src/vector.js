@@ -153,6 +153,14 @@ Sylvester.Vector.prototype = {
     ]);
   },
 
+  sum: function() {
+    var sum = 0, te = this.elements, n = te.length;
+    for (var i = 0; i < n; i++) {
+      sum += te[i];
+    }
+    return sum;
+  },
+
   max: function() {
     var m = 0, i = this.elements.length;
     while (i--) {
