@@ -436,7 +436,98 @@ Sylvester.Matrix.prototype = {
       this.elements.push([elements[i]]);
     }
     return this;
+  },
+
+  eigenvalues: function() {
+    if (!this.elements.length === 2) { return null; }
+    if (!this.isSquare()) { return null; }
+    var elems = this.elements,
+      aa = elems[0][0],
+      ab = elems[0][1],
+      ba = elems[1][0],
+      bb = elems[1][1];
+    var firsteigenvalue = 1.0 / 2.0 * (aa + bb
+        + Math.sqrt((aa - bb) * (aa - bb) + 4.0 * ab * ba)),
+      secondeigenvalue = 1.0 / 2.0 * (aa + bb
+        - Math.sqrt((aa - bb) * (aa - bb) + 4.0 * ab * ba)),
+      sortedvalues = [firsteigenvalue, secondeigenvalue].sort();
+    return Sylvester.Vector.create(sortedvalues);
+  },
+
+  // For 2x2 matrices only. Assumes real eigenvalues exist.
+  // Norms to absolute value 1.
+  eigenvectors: function() {
+    if (!this.elements.length === 2) { return null; }
+    if (!this.isSquare()) { return null; }
+
+    // if real eigenvalues exist
+    var elems = this.elements,
+      EV = this.eigenvalues().elements,
+      EPSILON = Sylvester.precision,
+      vectors;
+
+    function computeRealEigenvector(m, ev) {
+      var aa = m[0][0], ab = m[0][1], ba = m[1][0], bb = m[1][1],
+        x, y, norm;
+      if (Math.abs(aa - ev) < EPSILON && Math.abs(ab) < EPSILON) {
+        // return (l-d, c), where l is the eigenvalue
+        if (ba < 0.0) {
+          x = -ev + bb;
+          y = -ba;
+        } else {
+          x = ev - bb;
+          y = ba;
+        }
+      } else {
+        // return (b, l-a), where l is the eigenvalue
+        if (ev - aa < 0.0) {
+          x = -ab;
+          y = -ev + aa;
+        } else {
+          x = ab;
+          y = ev - aa;
+        }
+      }
+      norm = Math.sqrt(x * x + y * y);
+      return [x / norm, y / norm];
+    }
+
+    if (Math.abs(EV[0] - EV[1]) < EPSILON) {
+      // the same real eigenvalues
+      if (Math.abs(elems[0][0] - EV[0]) < EPSILON
+        && Math.abs(elems[0][1]) < EPSILON && Math.abs(elems[1][0]) < EPSILON
+        && Math.abs(elems[1][1] - EV[0]) < EPSILON) {
+        // two eigenvectors which are a basis of IR^2 (2-dim eigenspace)
+        vectors = [1.0, 0.0, 0.0, 1.0];
+      } else {
+        vectors = [computeRealEigenvector(elems, EV[0])[0],
+          computeRealEigenvector(elems, EV[0])[1], NaN, NaN];
+      }
+      // only one eigenvector
+    } else {
+      // two different real eigenvalues
+      var firstEigenvector = computeRealEigenvector(elems, EV[0]),
+        secondEigenvector = computeRealEigenvector(elems, EV[1]);
+      if (firstEigenvector[0] * secondEigenvector[1]
+        - firstEigenvector[1] * secondEigenvector[0] > 0) {
+        vectors = [firstEigenvector[0], firstEigenvector[1],
+          secondEigenvector[0], secondEigenvector[1]];
+      } else {
+        vectors = [firstEigenvector[0], firstEigenvector[1],
+          -secondEigenvector[0], -secondEigenvector[1]];
+      }
+    }
+
+    if (vectors.length === 4) {
+      return Sylvester.Matrix.create([
+          [vectors[0], vectors[1]],
+          [vectors[2], vectors[3]]
+        ]);
+    } else {
+      return Sylvester.Vector.create([vectors[0], vectors[1]]);
+    }
   }
+
 };
 
 Sylvester.Matrix.prototype.toUpperTriangular = Sylvester.Matrix.prototype.toRightTriangular;

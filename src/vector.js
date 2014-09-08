@@ -13,6 +13,7 @@ Sylvester.Vector.Random = function(n) {
 };
 
 Sylvester.Vector.Zero = function(n) {
+  n=n||3;
   var elements = [];
   while (n--) { elements.push(0); }
   return Sylvester.Vector.create(elements);
@@ -27,8 +28,9 @@ Sylvester.Vector.prototype = {
     return this.elements.length;
   },
 
-  modulus: function() {
-    return Math.sqrt(this.dot(this));
+  modulus: function(space) {
+    space=space||Sylvester.Vector.Space;
+    return space.norm(this.elements);
   },
 
   eql: function(vector) {
@@ -46,18 +48,11 @@ Sylvester.Vector.prototype = {
   },
 
   map: function(fn, context) {
-    var elements = [];
-    this.each(function(x, i) {
-      elements.push(fn.call(context, x, i));
-    });
-    return Sylvester.Vector.create(elements);
+    return Sylvester.Vector.create(this.elements.map(fn,context));
   },
 
   forEach: function(fn, context) {
-    var n = this.elements.length;
-    for (var i = 0; i < n; i++) {
-      fn.call(context, this.elements[i], i+1);
-    }
+    this.elements.forEach(fn,context);
   },
 
   toUnitVector: function() {
@@ -73,9 +68,9 @@ Sylvester.Vector.prototype = {
     var dot = 0, mod1 = 0, mod2 = 0;
     // Work things out in parallel to save time
     this.each(function(x, i) {
-      dot += x * V[i-1];
+      dot += x * V[i];
       mod1 += x * x;
-      mod2 += V[i-1] * V[i-1];
+      mod2 += V[i] * V[i];
     });
     mod1 = Math.sqrt(mod1); mod2 = Math.sqrt(mod2);
     if (mod1*mod2 === 0) { return null; }
@@ -83,6 +78,23 @@ Sylvester.Vector.prototype = {
     if (theta < -1) { theta = -1; }
     if (theta > 1) { theta = 1; }
     return Math.acos(theta);
+  },
+  
+  oAngleFrom: function(vector) {
+    if (this.elements.length !== vector.elements.length)return null;
+    var a,b;
+    if (this.elements.length == 2){
+      a=this.to3D();
+      b=vector.to3D();
+    }else{
+      a=this;
+      b=vector;
+    }
+    var cross=a.cross(b);
+    var dot=a.dot(b);
+    var sign=1;
+    cross.each(function(e){sign*=(e>=0?1:-1);});
+    return sign*Math.atan2(a.cross(b).modulus(), a.dot(b));
   },
 
   isParallelTo: function(vector) {
@@ -103,25 +115,30 @@ Sylvester.Vector.prototype = {
   add: function(vector) {
     var V = vector.elements || vector;
     if (this.elements.length !== V.length) { return null; }
-    return this.map(function(x, i) { return x + V[i-1]; });
+    return this.map(function(x, i) { return x + V[i]; });
   },
 
   subtract: function(vector) {
     var V = vector.elements || vector;
     if (this.elements.length !== V.length) { return null; }
-    return this.map(function(x, i) { return x - V[i-1]; });
+    return this.map(function(x, i) { return x - V[i]; });
   },
 
   multiply: function(k) {
     return this.map(function(x) { return x*k; });
   },
 
-  dot: function(vector) {
+  dot: function(vector,space) {
+    space=space||Sylvester.Vector.Space;
     var V = vector.elements || vector;
-    var i, product = 0, n = this.elements.length;
-    if (n !== V.length) { return null; }
-    while (n--) { product += this.elements[n] * V[n]; }
-    return product;
+    return space.dot(this.elements,V);
+  },
+  
+  wedge: function(vector) {
+    var B = vector.elements || vector;
+    if (this.elements.length !== 2 || B.length !== 2) { return null; }
+    var A = this.elements;
+    return (A[0] * B[1]) - (A[1] * B[0]);
   },
 
   cross: function(vector) {
@@ -167,16 +184,12 @@ Sylvester.Vector.prototype = {
     });
   },
 
-  distanceFrom: function(obj) {
+  distanceFrom: function(obj,space) {
     if (obj.anchor || (obj.start && obj.end)) { return obj.distanceFrom(this); }
     var V = obj.elements || obj;
     if (V.length !== this.elements.length) { return null; }
-    var sum = 0, part;
-    this.each(function(x, i) {
-      part = x - V[i-1];
-      sum += part * part;
-    });
-    return Math.sqrt(sum);
+    space=space||Sylvester.Vector.Space;
+    return space.metric(V,this.elements);
   },
 
   liesOn: function(line) {
@@ -188,6 +201,7 @@ Sylvester.Vector.prototype = {
   },
 
   rotate: function(t, obj) {
+    obj=obj||Sylvester.Vector.Origin;
     var V, R = null, x, y, z;
     if (t.determinant) { R = t.elements; }
     switch (this.elements.length) {
@@ -230,7 +244,7 @@ Sylvester.Vector.prototype = {
       // obj is a point
       var Q = obj.elements || obj;
       if (this.elements.length !== Q.length) { return null; }
-      return this.map(function(x, i) { return Q[i-1] + (Q[i-1] - x); });
+      return this.map(function(x, i) { return Q[i] + (Q[i] - x); });
     }
   },
 
@@ -260,3 +274,5 @@ Sylvester.Vector.prototype.each = Sylvester.Vector.prototype.forEach;
 Sylvester.Vector.i = Sylvester.Vector.create([1,0,0]);
 Sylvester.Vector.j = Sylvester.Vector.create([0,1,0]);
 Sylvester.Vector.k = Sylvester.Vector.create([0,0,1]);
+Sylvester.Vector.Origin = Sylvester.Vector.Zero();
+Sylvester.Vector.Space=new Sylvester.Spaces.Eucledian();
