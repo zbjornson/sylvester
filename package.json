@@ -39,7 +39,7 @@
    "wake":{
       "javascript":{
          "sourceDirectory":"src",
-         "targetDirectory":"lib",
+         "targetDirectory":".",
          "builds":{
             "src":{
                "digest":false,

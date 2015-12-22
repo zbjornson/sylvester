@@ -12,12 +12,12 @@ if (this.ActiveXObject)
 
 if (typeof require === 'function') {
   JS = require('../node_modules/jstest/jstest')
-  JS.ENV.Sylvester = require('../lib/sylvester')
+  JS.ENV.Sylvester = require('../sylvester')
   Sylvester.precision = 1e-6
   require('./runner')
 }
 else {
-  load('lib/sylvester.js')
+  load('./sylvester.js')
   load(JSCLASS_PATH + '/loader.js')
   load('test/runner.js')
 }
