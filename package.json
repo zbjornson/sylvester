@@ -4,7 +4,7 @@
 , "author"          : "James Coglan <jcoglan@gmail.com> (http://jcoglan.com/)"
 , "keywords"        : ["vector", "matrix", "geometry", "math"]
 
-, "version"         : "0.2.0"
+, "version"         : "0.1.4"
 , "engines"         : {"node": ">=0.4.0"}
 , "main"            : "./lib/sylvester"
 , "devDependencies" : {"jstest": "", "wake": ""}
