@@ -408,7 +408,7 @@ declare module Sylvester {
          *
          * @param matrix The multiplier.
          */
-        multiply(matrix: number|Matrix): Matrix;
+        multiply(matrix: number|Matrix|Vector): Matrix;
 
         /**
          * Returns the result of multiplying the matrix from the right by the argument. If the argument is a scalar
@@ -418,7 +418,7 @@ declare module Sylvester {
          *
          * @param matrix The multiplier.
          */
-        x(matrix: number|Matrix): Matrix;
+        x(matrix: number|Matrix|Vector): Matrix;
 
         /**
          * Returns the result of multiplying the matrix by another matrix.
